@@ -9,6 +9,10 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            transition: background 0.3s ease;
         }
 
         .container {
@@ -17,27 +21,97 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-family: Arial, sans-serif;
-            /* Prevent content from overflowing */
             max-height: 100vh;
             box-sizing: border-box;
             padding: 20px;
+            animation: fadeIn 1s ease;
         }
 
         .checkmark {
             width: 150px;
             height: 150px;
             margin-bottom: 30px;
+            animation: checkmark 1s ease-in-out;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #FF9500;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            stroke: #FF9500;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
         }
 
         .message {
             text-align: center;
-            font-size: 20px;
+            font-size: 24px;
             margin-bottom: 20px;
+            font-weight: 600;
+            animation: slideUp 0.8s ease 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes checkmark {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Language switcher for done page */
+        .language-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .language-switch select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+            background: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .language-switch select:focus {
+            outline: none;
+            border-color: #FF9500;
+            box-shadow: 0 0 0 3px rgba(255,149,0,0.1);
         }
     </style>
 </head>
 <body>
+    <!-- Language switcher -->
+    <div class="language-switch">
+        <select id="language" onchange="changeLanguage()">
+            <option value="vi-VN">Tiếng Việt</option>
+            <option value="en-US">English</option>
+            <option value="zh-CN">简体中文</option>
+        </select>
+    </div>
+    
     <div class="container">
         <svg class="checkmark" viewBox="0 0 52 52">
             <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" stroke="#4CAF50" stroke-width="2"/>
@@ -45,12 +119,47 @@
         </svg>
         
         <div class="message">
-            <p>配置成功！</p>
-            <p>Configuration successful!</p>
+            <p data-lang="config_success_zh">配置成功！</p>
+            <p data-lang="config_success_en">Configuration successful!</p>
+            <p data-lang="config_success_vi">Cấu hình thành công!</p>
         </div>
     </div>
     
     <script>
+        // Language data
+        const languages = {
+            'vi-VN': {
+                'config_success_zh': 'Cấu hình thành công!',
+                'config_success_en': 'Configuration successful!',
+                'config_success_vi': 'Cấu hình thành công!'
+            },
+            'en-US': {
+                'config_success_zh': 'Configuration successful!',
+                'config_success_en': 'Configuration successful!',
+                'config_success_vi': 'Configuration successful!'
+            },
+            'zh-CN': {
+                'config_success_zh': '配置成功！',
+                'config_success_en': 'Configuration successful!',
+                'config_success_vi': '配置成功！'
+            }
+        };
+
+        function changeLanguage() {
+            const lang = document.getElementById('language').value;
+            const data = languages[lang];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const elements = document.querySelectorAll(`[data-lang="${key}"]`);
+                    elements.forEach(el => el.textContent = data[key]);
+                });
+            }
+        }
+
+        // Set default language
+        document.getElementById('language').value = 'vi-VN';
+        changeLanguage();
+
         window.addEventListener('load', function() {
             // Send exit request after a short delay
             setTimeout(function() {
