@@ -1,3 +1,30 @@
+# Build artifacts
+build/
+sdkconfig
+sdkconfig.old
+*.bin
+*.elf
+*.map
+
+# ESP-IDF
+managed_components/
+dependencies.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# Distribution
 dist/
 _codeql_detected_source_root
-*.bak
