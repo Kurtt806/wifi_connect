@@ -60,11 +60,18 @@
 
 ## 📦 Cài đặt
 
-### Thành phần ESP-IDF
+### Từ ESP Component Registry (Khuyến nghị) 🏆
+```yaml
+# Thêm vào idf_component.yml của dự án
+dependencies:
+  kurtt806/wifi_connect: "^3.0.2"
+```
+
+### Từ GitHub Repository
 ```bash
 # Thêm vào dự án ESP-IDF của bạn
 cd components/
-git clone https://github.com/your-repo/esp32-wifi-connect.git
+git clone https://github.com/Kurtt806/wifi_connect.git
 ```
 
 ### Phụ thuộc
@@ -193,6 +200,12 @@ wifi_manager.SetEventCallback([](WifiEvent event) {
 ---
 
 ## 🔄 Nhật ký thay đổi
+
+### v3.0.2 🎨
+- 🖼️ Thay thế logo JPG bằng text "VI3D" màu cam
+- 🎨 Cập nhật CSS cho logo với màu cam #ff9500
+- 📱 Responsive design cho logo trên mobile
+- ✨ Cải thiện giao diện header với branding mới
 
 ### v3.0.0 🎉
 - ✨ Thêm cấu hình GPIO với giao diện modal

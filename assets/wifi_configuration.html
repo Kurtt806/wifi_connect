@@ -73,11 +73,12 @@
         }
 
         .header-logo {
-            height: 40px;
-            width: auto;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9500;
             margin-right: 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px var(--shadow);
+            text-shadow: 0 2px 4px var(--shadow);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         .header-controls {
@@ -606,7 +607,8 @@
             }
 
             .header-logo {
-                height: 32px;
+                font-size: 20px;
+                color: #ff9500;
                 margin-right: 8px;
             }
 
@@ -661,7 +663,7 @@
     <!-- Header -->
     <div class="header">
         <div style="display: flex; align-items: center;">
-            <img src="logo-512-512.jpg" alt="VIBOHUB Logo" class="header-logo">
+            <div class="header-logo">VI3D</div>
             <div class="header-title" data-lang="title">Cấu hình mạng</div>
         </div>
         <div class="header-controls">
