@@ -6,6 +6,6 @@ files:
   - .git
   - dist
 license: MIT
-repository: https://github.com/Kurtt806/wifi_connect
-url: https://github.com/Kurtt806/wifi_connect
-version: 3.0.2
+repository: https://github.com/Kurtt806/wifi_connect.git
+url: https://github.com/Kurtt806/wifi_connect.git
+version: 1.0.0
