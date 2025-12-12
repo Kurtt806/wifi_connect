@@ -7,35 +7,35 @@
 ![ESP-IDF](https://img.shields.io/badge/ESP--IDF-5.5.1-green?style=for-the-badge&logo=espressif)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-**🚀 Smart Wi-Fi Configuration for ESP32 Devices**
+**🚀 Cấu hình Wi-Fi thông minh cho thiết bị ESP32**
 
-[📖 Documentation](#-documentation) • [🔧 Installation](#-installation) • [📡 API Reference](#-api-reference) • [🎯 Usage](#-usage) • [🤝 Contributing](#-contributing)
+[📖 Tài liệu](#-tài-liệu) • [🔧 Cài đặt](#-cài-đặt) • [📡 API](#-api) • [🎯 Cách sử dụng](#-cách-sử-dụng) • [🤝 Đóng góp](#-đóng-góp)
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ Tính năng
 
 <div align="center">
 
-### 🌟 Core Features
-| Feature | Description |
-|---------|-------------|
-| 🔄 **Auto Connect** | Automatically connects to saved Wi-Fi networks |
-| 📱 **Web Config** | Beautiful web interface for Wi-Fi setup |
-| 🌍 **Multi-Language** | Support for Vietnamese, English, Chinese |
-| 📶 **AP Mode** | Creates hotspot when connection fails |
-| ⚙️ **Advanced Config** | OTA updates, power settings, sleep mode |
-| 🔌 **GPIO Config** | Configure LED, button, relay, and display pins |
-| 🎨 **Modern UI** | Apple-inspired design with dark/light themes |
+### 🌟 Tính năng chính
+| Tính năng | Mô tả |
+|-----------|--------|
+| 🔄 **Tự động kết nối** | Tự động kết nối với mạng Wi-Fi đã lưu |
+| 📱 **Giao diện web** | Giao diện web đẹp cho việc cấu hình Wi-Fi |
+| 🌍 **Đa ngôn ngữ** | Hỗ trợ tiếng Việt, Anh, Trung |
+| 📶 **Chế độ AP** | Tạo hotspot khi không thể kết nối |
+| ⚙️ **Cấu hình nâng cao** | Cập nhật OTA, cài đặt nguồn, chế độ ngủ |
+| 🔌 **Cấu hình GPIO** | Cấu hình chân LED, nút nhấn, relay và màn hình |
+| 🎨 **Giao diện hiện đại** | Thiết kế theo phong cách Apple với chủ đề sáng/tối |
 
-### 🎯 Smart Configuration
-- **Captive Portal**: Automatic redirect to config page
-- **Multiple SSIDs**: Save up to 10 Wi-Fi networks
-- **Priority Management**: Set preferred networks
-- **5G Support**: ESP32C5 5G Wi-Fi support
-- **SmartConfig**: ESPTouch v2 support
+### 🎯 Cấu hình thông minh
+- **Captive Portal**: Tự động chuyển hướng đến trang cấu hình
+- **Nhiều SSID**: Lưu trữ lên đến 10 mạng Wi-Fi
+- **Quản lý ưu tiên**: Đặt mạng ưu tiên
+- **Hỗ trợ 5G**: Hỗ trợ Wi-Fi 5G cho ESP32C5
+- **SmartConfig**: Hỗ trợ ESPTouch v2
 
 </div>
 
@@ -45,95 +45,95 @@
 
 <div align="center">
 
-### 🌐 Wi-Fi Configuration Interface
-<img src="assets/ap_v3.png" width="300" alt="Wi-Fi Configuration" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+### 🌐 Giao diện cấu hình Wi-Fi
+<img src="assets/ap_v3.png" width="300" alt="Giao diện cấu hình Wi-Fi" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
-### ⚙️ Advanced Options
-<img src="assets/ap_v3_advanced.png" width="300" alt="Advanced Configuration" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+### ⚙️ Tùy chọn nâng cao
+<img src="assets/ap_v3_advanced.png" width="300" alt="Cấu hình nâng cao" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
-### 🎮 GPIO Configuration
-*Modern modal interface for pin configuration with driver selection*
+### 🎮 Cấu hình GPIO
+*Giao diện modal hiện đại để cấu hình chân với lựa chọn driver*
 
 </div>
 
 ---
 
-## 📦 Installation
+## 📦 Cài đặt
 
-### ESP-IDF Component
+### Thành phần ESP-IDF
 ```bash
-# Add to your ESP-IDF project
+# Thêm vào dự án ESP-IDF của bạn
 cd components/
 git clone https://github.com/your-repo/esp32-wifi-connect.git
 ```
 
-### Dependencies
+### Phụ thuộc
 - ESP-IDF v5.5.1+
-- cJSON library
-- NVS flash storage
+- Thư viện cJSON
+- Bộ nhớ flash NVS
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Bắt đầu nhanh
 
 ```cpp
 #include <wifi_manager.h>
 #include <ssid_manager.h>
 
-// Initialize ESP-IDF
+// Khởi tạo ESP-IDF
 ESP_ERROR_CHECK(esp_event_loop_create_default());
 ESP_ERROR_CHECK(nvs_flash_init());
 
-// Get WiFi Manager instance
+// Lấy instance WiFi Manager
 auto& wifi_manager = WifiManager::GetInstance();
 
-// Configure and initialize
+// Cấu hình và khởi tạo
 WifiManagerConfig config;
 config.ssid_prefix = "MyDevice-";
 config.language = "vi-VN";
 wifi_manager.Initialize(config);
 
-// Set event callbacks
+// Đặt callback sự kiện
 wifi_manager.SetEventCallback([](WifiEvent event) {
     switch (event) {
         case WifiEvent::Connected:
-            printf("🎉 Wi-Fi Connected!\n");
+            printf("🎉 Đã kết nối Wi-Fi!\n");
             break;
         case WifiEvent::ConfigModeEnter:
-            printf("🔧 Entered Config Mode: http://192.168.4.1\n");
+            printf("🔧 Vào chế độ cấu hình: http://192.168.4.1\n");
             break;
         default:
             break;
     }
 });
 
-// Start Wi-Fi management
+// Bắt đầu quản lý Wi-Fi
 if (SsidManager::GetInstance().GetSsidList().empty()) {
-    wifi_manager.StartConfigAp();  // Start config mode
+    wifi_manager.StartConfigAp();  // Bắt đầu chế độ cấu hình
 } else {
-    wifi_manager.StartStation();   // Connect to saved networks
+    wifi_manager.StartStation();   // Kết nối với mạng đã lưu
 }
 ```
 
 ---
 
-## 📡 API Reference
+## 📡 API
 
-### 🌐 Web Endpoints
+### 🌐 Điểm cuối Web
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Main configuration page |
-| `POST` | `/submit` | Submit Wi-Fi credentials |
-| `GET` | `/scan` | Scan available networks |
-| `GET` | `/saved/list` | Get saved networks |
-| `GET` | `/advanced/config` | Get advanced settings |
-| `POST` | `/advanced/submit` | Save advanced settings |
-| `GET` | `/pins/config` | Get GPIO configuration |
-| `POST` | `/pins/submit` | Save GPIO configuration |
-| `GET` | `/pins/default` | Get default GPIO config |
+| Phương thức | Điểm cuối | Mô tả |
+|-------------|-----------|--------|
+| `GET` | `/` | Trang cấu hình chính |
+| `POST` | `/submit` | Gửi thông tin đăng nhập Wi-Fi |
+| `GET` | `/scan` | Quét mạng khả dụng |
+| `GET` | `/saved/list` | Lấy mạng đã lưu |
+| `GET` | `/advanced/config` | Lấy cài đặt nâng cao |
+| `POST` | `/advanced/submit` | Lưu cài đặt nâng cao |
+| `GET` | `/pins/config` | Lấy cấu hình GPIO |
+| `POST` | `/pins/submit` | Lưu cấu hình GPIO |
+| `GET` | `/pins/default` | Lấy cấu hình GPIO mặc định |
 
-### 🔧 GPIO Configuration
+### 🔧 Cấu hình GPIO
 
 ```json
 {
@@ -146,7 +146,7 @@ if (SsidManager::GetInstance().GetSsidList().empty()) {
 }
 ```
 
-### 🎨 Supported Screen Drivers
+### 🎨 Driver màn hình được hỗ trợ
 - **SSD1306** (128x64 OLED) - I2C
 - **SH1106** (128x64 OLED) - I2C
 - **ST7735** (128x160 TFT) - SPI
@@ -155,9 +155,9 @@ if (SsidManager::GetInstance().GetSsidList().empty()) {
 
 ---
 
-## 🎯 Advanced Usage
+## 🎯 Cách sử dụng nâng cao
 
-### Custom Configuration
+### Cấu hình tùy chỉnh
 ```cpp
 WifiManagerConfig config;
 config.ssid_prefix = "SmartDevice-";
@@ -166,25 +166,25 @@ config.max_retry_count = 5;
 wifi_manager.Initialize(config);
 ```
 
-### GPIO Pin Management
+### Quản lý chân GPIO
 ```cpp
-// Access GPIO configuration
+// Truy cập cấu hình GPIO
 auto& config_ap = wifi_manager.GetConfigAp();
-// GPIO settings are automatically loaded from NVS
+// Cài đặt GPIO được tải tự động từ NVS
 ```
 
-### Event Handling
+### Xử lý sự kiện
 ```cpp
 wifi_manager.SetEventCallback([](WifiEvent event) {
     switch (event) {
         case WifiEvent::Scanning:
-            // Show scanning animation
+            // Hiển thị animation quét
             break;
         case WifiEvent::Connected:
-            // Update connection status
+            // Cập nhật trạng thái kết nối
             break;
         case WifiEvent::ConfigModeEnter:
-            // Show config instructions
+            // Hiển thị hướng dẫn cấu hình
             break;
     }
 });
@@ -192,49 +192,49 @@ wifi_manager.SetEventCallback([](WifiEvent event) {
 
 ---
 
-## 🔄 Changelog
+## 🔄 Nhật ký thay đổi
 
 ### v3.0.0 🎉
-- ✨ Added GPIO configuration with modal interface
-- 🎨 Modern Apple-inspired UI design
-- 🌙 Dark/Light theme support
-- 🔧 Enhanced error handling and state management
-- 📱 Improved mobile responsiveness
+- ✨ Thêm cấu hình GPIO với giao diện modal
+- 🎨 Thiết kế UI hiện đại theo phong cách Apple
+- 🌙 Hỗ trợ chủ đề sáng/tối
+- 🔧 Cải thiện xử lý lỗi và quản lý trạng thái
+- 📱 Cải thiện khả năng đáp ứng trên thiết bị di động
 
 ### v2.6.0 📶
-- 🌐 Added ESP32C5 5G Wi-Fi support
+- 🌐 Thêm hỗ trợ Wi-Fi 5G cho ESP32C5
 
 ### v2.4.0 🌍
-- 💬 Added Vietnamese, Traditional Chinese languages
-- ⚙️ Advanced configuration tab
-- 🔌 Connection optimization
+- 💬 Thêm ngôn ngữ tiếng Việt, Trung phồn thể
+- ⚙️ Tab cấu hình nâng cao
+- 🔌 Tối ưu hóa kết nối
 
 ### v2.2.0 🛠️
-- 📱 ESP32 SmartConfig (ESPTouch v2) support
+- 📱 Hỗ trợ ESP32 SmartConfig (ESPTouch v2)
 
 ---
 
-## 🤝 Contributing
+## 🤝 Đóng góp
 
 <div align="center">
 
-**We welcome contributions!** 🎉
+**Chúng tôi chào đón mọi đóng góp!** 🎉
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork repository
+2. Tạo nhánh tính năng của bạn (`git checkout -b feature/tinh-nang-tuyet-voi`)
+3. Commit thay đổi của bạn (`git commit -m 'Thêm tính năng tuyệt vời'`)
+4. Push lên nhánh (`git push origin feature/tinh-nang-tuyet-voi`)
+5. Mở Pull Request
 
-### Development Setup
+### Thiết lập phát triển
 ```bash
-# Clone and setup ESP-IDF
+# Clone và thiết lập ESP-IDF
 git clone https://github.com/espressif/esp-idf.git
 cd esp-idf
 ./install.sh
 . ./export.sh
 
-# Build the component
+# Build thành phần
 idf.py build
 ```
 
@@ -242,65 +242,65 @@ idf.py build
 
 ---
 
-## 📚 Documentation
+## 📚 Tài liệu
 
-- 📖 [ESP-IDF Programming Guide](https://docs.espressif.com/projects/esp-idf/)
-- 🔧 [ESP32 Technical Reference](https://www.espressif.com/sites/default/files/documentation/esp32_technical_reference_manual_en.pdf)
-- 🌐 [Wi-Fi API Reference](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_wifi.html)
-
----
-
-## 🎨 UI Features
-
-### Modern Design Elements
-- 🍎 Apple-inspired SF Pro fonts
-- 🎭 Smooth animations and transitions
-- 🌈 Orange accent color scheme
-- 📱 Responsive design for all devices
-- 🎪 Modal dialogs for complex configurations
-
-### Accessibility
-- ♿ Screen reader support
-- ⌨️ Keyboard navigation
-- 🎯 High contrast mode
-- 🌍 Multi-language support
+- 📖 [Hướng dẫn lập trình ESP-IDF](https://docs.espressif.com/projects/esp-idf/)
+- 🔧 [Tài liệu kỹ thuật ESP32](https://www.espressif.com/sites/default/files/documentation/esp32_technical_reference_manual_en.pdf)
+- 🌐 [API Wi-Fi](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_wifi.html)
 
 ---
 
-## ⚠️ Important Notes
+## 🎨 Tính năng giao diện
 
-- **NVS Storage**: Wi-Fi credentials stored in "wifi" namespace
-- **GPIO Config**: Pin settings stored in "gpio" namespace
-- **Memory**: Component uses ~50KB RAM in config mode
-- **Security**: Web interface accessible on local network only
+### Các yếu tố thiết kế hiện đại
+- 🍎 Font SF Pro theo phong cách Apple
+- 🎭 Animation và chuyển tiếp mượt mà
+- 🌈 Bảng màu cam làm điểm nhấn
+- 📱 Thiết kế đáp ứng cho mọi thiết bị
+- 🎪 Modal dialogs cho cấu hình phức tạp
+
+### Khả năng truy cập
+- ♿ Hỗ trợ trình đọc màn hình
+- ⌨️ Điều hướng bằng bàn phím
+- 🎯 Chế độ tương phản cao
+- 🌍 Hỗ trợ đa ngôn ngữ
 
 ---
 
-## 📄 License
+## ⚠️ Lưu ý quan trọng
+
+- **Bộ nhớ NVS**: Thông tin đăng nhập Wi-Fi được lưu trong namespace "wifi"
+- **Cấu hình GPIO**: Cài đặt chân được lưu trong namespace "gpio"
+- **Bộ nhớ**: Thành phần sử dụng ~50KB RAM trong chế độ cấu hình
+- **Bảo mật**: Giao diện web chỉ truy cập được trên mạng cục bộ
+
+---
+
+## 📄 Giấy phép
 
 <div align="center">
 
-**MIT License** - feel free to use in your projects! 🚀
+**Giấy phép MIT** - Tự do sử dụng trong dự án của bạn! 🚀
 
-Copyright © 2025 ESP32 Wi-Fi Connect
+Bản quyền © 2025 ESP32 Wi-Fi Connect
 
 </div>
 
 ---
 
-## 🙏 Acknowledgments
+## 🙏 Lời cảm ơn
 
 <div align="center">
 
-**Based on the original work from:**
+**Dựa trên công việc gốc từ:**
 ### [78/xiaozhi-esp32](https://github.com/78/xiaozhi-esp32) ⭐
 
-*Special thanks to the ESP32 community and Espressif for their amazing work!*
+*Cảm ơn đặc biệt cộng đồng ESP32 và Espressif vì công việc tuyệt vời của họ!*
 
 ---
 
-**Made with ❤️ for the ESP32 Community**
+**Được tạo với ❤️ cho cộng đồng ESP32**
 
-[⬆️ Back to Top](#-esp32-wi-fi-connect)
+[⬆️ Về đầu trang](#-esp32-wi-fi-connect)
 
 </div>
