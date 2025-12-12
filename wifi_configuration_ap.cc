@@ -36,6 +36,19 @@ WifiConfigurationAp::WifiConfigurationAp()
     instance_got_ip_ = nullptr;
     max_tx_power_ = 0;
     remember_bssid_ = false;
+    
+    // 初始化GPIO配置
+    gpio_led_ = -1;
+    gpio_button_ = -1;
+    gpio_relay_ = -1;
+    driver_screen_ = "none";
+    screen_scl_ = -1;
+    screen_sda_ = -1;
+    screen_mosi_ = -1;
+    screen_sck_ = -1;
+    screen_cs_ = -1;
+    screen_dc_ = -1;
+    screen_rst_ = -1;
 }
 
 std::vector<wifi_ap_record_t> WifiConfigurationAp::GetAccessPoints()
@@ -664,6 +677,277 @@ void WifiConfigurationAp::StartWebServer()
     };
     ESP_ERROR_CHECK(httpd_register_uri_handler(server_, &advanced_submit));
 
+    // Register the /pins/config URI
+    httpd_uri_t pins_config = {
+        .uri = "/pins/config",
+        .method = HTTP_GET,
+        .handler = [](httpd_req_t *req) -> esp_err_t {
+            // 获取当前对象
+            auto *this_ = static_cast<WifiConfigurationAp *>(req->user_ctx);
+            
+            // 创建JSON对象
+            cJSON *json = cJSON_CreateObject();
+            if (!json) {
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to create JSON");
+                return ESP_FAIL;
+            }
+
+            // 添加GPIO配置项到JSON
+            cJSON_AddNumberToObject(json, "gpio_led", this_->gpio_led_);
+            cJSON_AddNumberToObject(json, "gpio_button", this_->gpio_button_);
+            cJSON_AddNumberToObject(json, "gpio_relay", this_->gpio_relay_);
+            cJSON_AddStringToObject(json, "driver_screen", this_->driver_screen_.c_str());
+            cJSON_AddNumberToObject(json, "screen_scl", this_->screen_scl_);
+            cJSON_AddNumberToObject(json, "screen_sda", this_->screen_sda_);
+            cJSON_AddNumberToObject(json, "screen_mosi", this_->screen_mosi_);
+            cJSON_AddNumberToObject(json, "screen_sck", this_->screen_sck_);
+            cJSON_AddNumberToObject(json, "screen_cs", this_->screen_cs_);
+            cJSON_AddNumberToObject(json, "screen_dc", this_->screen_dc_);
+            cJSON_AddNumberToObject(json, "screen_rst", this_->screen_rst_);
+
+            // 发送JSON响应
+            char *json_str = cJSON_PrintUnformatted(json);
+            cJSON_Delete(json);
+            if (!json_str) {
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to print JSON");
+                return ESP_FAIL;
+            }
+
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Connection", "close");
+            httpd_resp_send(req, json_str, strlen(json_str));
+            free(json_str);
+            return ESP_OK;
+        },
+        .user_ctx = this
+    };
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server_, &pins_config));
+
+    // Register the /pins/submit URI
+    httpd_uri_t pins_submit = {
+        .uri = "/pins/submit",
+        .method = HTTP_POST,
+        .handler = [](httpd_req_t *req) -> esp_err_t {
+            char *buf;
+            size_t buf_len = req->content_len;
+            if (buf_len > 2048) {
+                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Payload too large");
+                return ESP_FAIL;
+            }
+
+            buf = (char *)malloc(buf_len + 1);
+            if (!buf) {
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to allocate memory");
+                return ESP_FAIL;
+            }
+
+            int ret = httpd_req_recv(req, buf, buf_len);
+            if (ret <= 0) {
+                free(buf);
+                if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+                    httpd_resp_send_408(req);
+                } else {
+                    httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Failed to receive request");
+                }
+                return ESP_FAIL;
+            }
+            buf[ret] = '\0';
+
+            // 解析JSON数据
+            cJSON *json = cJSON_Parse(buf);
+            free(buf);
+            if (!json) {
+                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid JSON");
+                return ESP_FAIL;
+            }
+
+            // 获取当前对象
+            auto *this_ = static_cast<WifiConfigurationAp *>(req->user_ctx);
+
+            // 打开NVS
+            nvs_handle_t nvs;
+            esp_err_t err = nvs_open("gpio", NVS_READWRITE, &nvs);
+            if (err != ESP_OK) {
+                cJSON_Delete(json);
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to open NVS");
+                return ESP_FAIL;
+            }
+
+            // 保存GPIO配置
+            cJSON *gpio_led = cJSON_GetObjectItem(json, "gpio_led");
+            if (cJSON_IsNumber(gpio_led)) {
+                this_->gpio_led_ = gpio_led->valueint;
+                err = nvs_set_i32(nvs, "gpio_led", this_->gpio_led_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save gpio_led: %d", err);
+                }
+            }
+
+            cJSON *gpio_button = cJSON_GetObjectItem(json, "gpio_button");
+            if (cJSON_IsNumber(gpio_button)) {
+                this_->gpio_button_ = gpio_button->valueint;
+                err = nvs_set_i32(nvs, "gpio_button", this_->gpio_button_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save gpio_button: %d", err);
+                }
+            }
+
+            cJSON *gpio_relay = cJSON_GetObjectItem(json, "gpio_relay");
+            if (cJSON_IsNumber(gpio_relay)) {
+                this_->gpio_relay_ = gpio_relay->valueint;
+                err = nvs_set_i32(nvs, "gpio_relay", this_->gpio_relay_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save gpio_relay: %d", err);
+                }
+            }
+
+            cJSON *driver_screen = cJSON_GetObjectItem(json, "driver_screen");
+            if (cJSON_IsString(driver_screen) && driver_screen->valuestring) {
+                this_->driver_screen_ = driver_screen->valuestring;
+                err = nvs_set_str(nvs, "driver_screen", this_->driver_screen_.c_str());
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save driver_screen: %d", err);
+                }
+            }
+
+            cJSON *screen_scl = cJSON_GetObjectItem(json, "screen_scl");
+            if (cJSON_IsNumber(screen_scl)) {
+                this_->screen_scl_ = screen_scl->valueint;
+                err = nvs_set_i32(nvs, "screen_scl", this_->screen_scl_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_scl: %d", err);
+                }
+            }
+
+            cJSON *screen_sda = cJSON_GetObjectItem(json, "screen_sda");
+            if (cJSON_IsNumber(screen_sda)) {
+                this_->screen_sda_ = screen_sda->valueint;
+                err = nvs_set_i32(nvs, "screen_sda", this_->screen_sda_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_sda: %d", err);
+                }
+            }
+
+            cJSON *screen_mosi = cJSON_GetObjectItem(json, "screen_mosi");
+            if (cJSON_IsNumber(screen_mosi)) {
+                this_->screen_mosi_ = screen_mosi->valueint;
+                err = nvs_set_i32(nvs, "screen_mosi", this_->screen_mosi_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_mosi: %d", err);
+                }
+            }
+
+            cJSON *screen_sck = cJSON_GetObjectItem(json, "screen_sck");
+            if (cJSON_IsNumber(screen_sck)) {
+                this_->screen_sck_ = screen_sck->valueint;
+                err = nvs_set_i32(nvs, "screen_sck", this_->screen_sck_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_sck: %d", err);
+                }
+            }
+
+            cJSON *screen_cs = cJSON_GetObjectItem(json, "screen_cs");
+            if (cJSON_IsNumber(screen_cs)) {
+                this_->screen_cs_ = screen_cs->valueint;
+                err = nvs_set_i32(nvs, "screen_cs", this_->screen_cs_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_cs: %d", err);
+                }
+            }
+
+            cJSON *screen_dc = cJSON_GetObjectItem(json, "screen_dc");
+            if (cJSON_IsNumber(screen_dc)) {
+                this_->screen_dc_ = screen_dc->valueint;
+                err = nvs_set_i32(nvs, "screen_dc", this_->screen_dc_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_dc: %d", err);
+                }
+            }
+
+            cJSON *screen_rst = cJSON_GetObjectItem(json, "screen_rst");
+            if (cJSON_IsNumber(screen_rst)) {
+                this_->screen_rst_ = screen_rst->valueint;
+                err = nvs_set_i32(nvs, "screen_rst", this_->screen_rst_);
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save screen_rst: %d", err);
+                }
+            }
+
+            // 提交更改
+            err = nvs_commit(nvs);
+            nvs_close(nvs);
+            cJSON_Delete(json);
+
+            if (err != ESP_OK) {
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to save GPIO configuration");
+                return ESP_FAIL;
+            }
+
+            // 发送成功响应
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Connection", "close");
+            httpd_resp_send(req, "{\"success\":true}", HTTPD_RESP_USE_STRLEN);
+
+            ESP_LOGI(TAG, "Saved GPIO settings: led=%d, button=%d, relay=%d, driver=%s",
+                this_->gpio_led_, this_->gpio_button_, this_->gpio_relay_, this_->driver_screen_.c_str());
+            return ESP_OK;
+        },
+        .user_ctx = this
+    };
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server_, &pins_submit));
+
+    // Register the /pins/default URI
+    httpd_uri_t pins_default = {
+        .uri = "/pins/default",
+        .method = HTTP_GET,
+        .handler = [](httpd_req_t *req) -> esp_err_t {
+            // 获取当前对象
+            auto *this_ = static_cast<WifiConfigurationAp *>(req->user_ctx);
+            
+            // 创建JSON对象 với cấu hình mặc định
+            cJSON *json = cJSON_CreateObject();
+            if (!json) {
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to create JSON");
+                return ESP_FAIL;
+            }
+
+            // Cấu hình GPIO mặc định
+            cJSON_AddNumberToObject(json, "gpio_led", 2);      // GPIO 2
+            cJSON_AddNumberToObject(json, "gpio_button", 0);   // GPIO 0
+            cJSON_AddNumberToObject(json, "gpio_relay", 4);    // GPIO 4
+            cJSON_AddStringToObject(json, "driver_screen", "ssd1306");
+            cJSON_AddNumberToObject(json, "screen_scl", 22);   // GPIO 22
+            cJSON_AddNumberToObject(json, "screen_sda", 21);   // GPIO 21
+            cJSON_AddNumberToObject(json, "screen_mosi", -1);  // Không sử dụng
+            cJSON_AddNumberToObject(json, "screen_sck", -1);   // Không sử dụng
+            cJSON_AddNumberToObject(json, "screen_cs", -1);    // Không sử dụng
+            cJSON_AddNumberToObject(json, "screen_dc", -1);    // Không sử dụng
+            cJSON_AddNumberToObject(json, "screen_rst", -1);   // Không sử dụng
+
+            // 发送JSON响应
+            char *json_str = cJSON_PrintUnformatted(json);
+            cJSON_Delete(json);
+            if (!json_str) {
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to print JSON");
+                return ESP_FAIL;
+            }
+
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Connection", "close");
+            httpd_resp_send(req, json_str, strlen(json_str));
+            free(json_str);
+            return ESP_OK;
+        },
+        .user_ctx = this
+    };
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server_, &pins_default));
+
+    // Load GPIO configuration from NVS
+    LoadGpioConfig();
+    
+    // Load advanced configuration from NVS
+    LoadAdvancedConfig();
+
     ESP_LOGI(TAG, "Web server started");
 }
 
@@ -835,6 +1119,105 @@ void WifiConfigurationAp::SmartConfigEventHandler(void *arg, esp_event_base_t ev
     }
 }
 #endif // !CONFIG_IDF_TARGET_ESP32P4
+
+void WifiConfigurationAp::LoadGpioConfig() {
+    nvs_handle_t nvs;
+    esp_err_t err = nvs_open("gpio", NVS_READONLY, &nvs);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to open GPIO NVS: %d, using defaults", err);
+        return;
+    }
+
+    // Load GPIO configurations with defaults
+    int32_t value;
+    
+    if (nvs_get_i32(nvs, "gpio_led", &value) == ESP_OK) {
+        gpio_led_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "gpio_button", &value) == ESP_OK) {
+        gpio_button_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "gpio_relay", &value) == ESP_OK) {
+        gpio_relay_ = value;
+    }
+
+    size_t str_len = 32;
+    char str_buf[32];
+    if (nvs_get_str(nvs, "driver_screen", str_buf, &str_len) == ESP_OK) {
+        driver_screen_ = str_buf;
+    }
+
+    if (nvs_get_i32(nvs, "screen_scl", &value) == ESP_OK) {
+        screen_scl_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "screen_sda", &value) == ESP_OK) {
+        screen_sda_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "screen_mosi", &value) == ESP_OK) {
+        screen_mosi_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "screen_sck", &value) == ESP_OK) {
+        screen_sck_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "screen_cs", &value) == ESP_OK) {
+        screen_cs_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "screen_dc", &value) == ESP_OK) {
+        screen_dc_ = value;
+    }
+    
+    if (nvs_get_i32(nvs, "screen_rst", &value) == ESP_OK) {
+        screen_rst_ = value;
+    }
+
+    nvs_close(nvs);
+    
+    ESP_LOGI(TAG, "Loaded GPIO config: led=%d, button=%d, relay=%d, driver=%s",
+        gpio_led_, gpio_button_, gpio_relay_, driver_screen_.c_str());
+}
+
+void WifiConfigurationAp::LoadAdvancedConfig() {
+    nvs_handle_t nvs;
+    esp_err_t err = nvs_open("wifi", NVS_READONLY, &nvs);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to open advanced NVS: %d, using defaults", err);
+        return;
+    }
+
+    // Load advanced configurations
+    size_t str_len = 256;
+    char str_buf[256];
+    
+    if (nvs_get_str(nvs, "ota_url", str_buf, &str_len) == ESP_OK) {
+        ota_url_ = str_buf;
+    }
+
+    int32_t value;
+    if (nvs_get_i32(nvs, "max_tx_power", &value) == ESP_OK) {
+        max_tx_power_ = value;
+    }
+
+    uint8_t bool_value;
+    if (nvs_get_u8(nvs, "remember_bssid", &bool_value) == ESP_OK) {
+        remember_bssid_ = bool_value != 0;
+    }
+
+    if (nvs_get_u8(nvs, "sleep_mode", &bool_value) == ESP_OK) {
+        sleep_mode_ = bool_value != 0;
+    }
+
+    nvs_close(nvs);
+    
+    ESP_LOGI(TAG, "Loaded advanced config: ota_url=%s, max_tx_power=%d, remember_bssid=%d, sleep_mode=%d",
+        ota_url_.c_str(), max_tx_power_, remember_bssid_, sleep_mode_);
+}
 
 void WifiConfigurationAp::Stop() {
 #if !CONFIG_IDF_TARGET_ESP32P4

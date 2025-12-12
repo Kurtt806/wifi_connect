@@ -66,17 +66,32 @@ private:
     esp_netif_t* ap_netif_ = nullptr;
     std::vector<wifi_ap_record_t> ap_records_;
 
-    // 高级配置项
+
     std::string ota_url_;
     int8_t max_tx_power_;
     bool remember_bssid_;
     bool sleep_mode_;
+
+    // GPIO 
+    int gpio_led_;
+    int gpio_button_;
+    int gpio_relay_;
+    std::string driver_screen_;
+    int screen_scl_;
+    int screen_sda_;
+    int screen_mosi_;
+    int screen_sck_;
+    int screen_cs_;
+    int screen_dc_;
+    int screen_rst_;
 
     // Callbacks
     std::function<void()> on_exit_requested_;
 
     void StartAccessPoint();
     void StartWebServer();
+    void LoadGpioConfig();
+    void LoadAdvancedConfig();
 
     // Event handlers
     static void WifiEventHandler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
