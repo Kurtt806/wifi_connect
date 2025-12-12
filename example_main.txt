@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <esp_log.h>
+#include <nvs_flash.h>
+
+#include "wifi_manager.h"
+
+static const char *TAG = "wifi_example";
+
+extern "C" void app_main(void)
+{
+    // Initialize NVS
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
+    // Configure WiFi Manager
+    WifiManagerConfig config;
+    config.ssid_prefix = "ESP32-Config";
+    config.language = "vi-VN";  // Vietnamese
+
+    // Get WiFi Manager instance
+    auto& wifi = WifiManager::GetInstance();
+
+    // Set event callback
+    wifi.SetEventCallback([](WifiEvent event) {
+        switch (event) {
+            case WifiEvent::Scanning:
+                ESP_LOGI(TAG, "Scanning for WiFi networks...");
+                break;
+            case WifiEvent::Connecting:
+                ESP_LOGI(TAG, "Connecting to WiFi...");
+                break;
+            case WifiEvent::Connected:
+                ESP_LOGI(TAG, "WiFi connected successfully!");
+                break;
+            case WifiEvent::Disconnected:
+                ESP_LOGW(TAG, "WiFi disconnected");
+                break;
+            case WifiEvent::ConfigModeEnter:
+                ESP_LOGI(TAG, "Configuration AP mode started");
+                ESP_LOGI(TAG, "Connect to http://192.168.4.1 to configure WiFi");
+                break;
+            case WifiEvent::ConfigModeExit:
+                ESP_LOGI(TAG, "Configuration AP mode exited");
+                break;
+        }
+    });
+
+    // Initialize and start WiFi
+    ESP_ERROR_CHECK(wifi.Initialize(config));
+    ESP_ERROR_CHECK(wifi.StartStation());
+
+    // Configure advanced settings (optional)
+    wifi.SetOtaUrl("http://example.com/firmware.bin");
+    wifi.SetMaxTxPower(80); // 20 dBm
+    wifi.SetSleepMode(false);
+    wifi.SetRememberBssid(true);
+
+    ESP_LOGI(TAG, "WiFi Manager started. Waiting for connection...");
+
+    // Main loop
+    while (true) {
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
