@@ -1,188 +1,277 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Network Configuration</title>
+    <title>VIBO Config</title>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="referrer no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <style type="text/css">
-        /* ========== Base Styles ========== */
+        /* ========== Modern UI Design ========== */
+        :root {
+            /* Light Theme (Default) - Moss Green Primary */
+            --primary-color: #22c55e; /* Moss green */
+            --primary-hover: #16a34a;
+            --primary-light: #4ade80;
+            --secondary-color: #64748b;
+            --accent-color: #059669; /* Emerald */
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --background-primary: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #f0fdf4 100%);
+            --background-secondary: rgba(255, 255, 255, 0.95);
+            --background-tertiary: rgba(240, 253, 244, 0.8);
+            --text-primary: #1d1d1f;
+            --text-secondary: #6b7280;
+            --shadow-light: 0 2px 8px rgba(34, 197, 94, 0.1);
+            --shadow-medium: 0 4px 16px rgba(34, 197, 94, 0.12);
+            --shadow-large: 0 8px 32px rgba(34, 197, 94, 0.15);
+            --border-radius: 16px;
+            --border-radius-small: 8px;
+            --border-radius-large: 20px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Apple-like easing */
+            --transition-fast: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 50%, #f5f7fa 100%);
-            color: #1d1d1f;
+            padding: 32px;
+            background: var(--background-primary);
+            background-attachment: fixed;
+            color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
         /* ========== Typography ========== */
         h3 {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 24px 0;
+            color: var(--text-primary);
+            letter-spacing: -0.022em;
+            line-height: 1.2;
+        }
+
+        p {
             margin: 0 0 16px 0;
-            color: #1d1d1f;
+            color: var(--text-secondary);
+            font-size: 17px;
+            line-height: 1.5;
         }
 
         /* ========== Form Elements ========== */
         label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #424245;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
+            letter-spacing: -0.016em;
         }
+
         input, select {
             width: 100%;
-            padding: 12px 16px;
+            padding: 16px 20px;
             box-sizing: border-box;
-            border: 1px solid #d2d2d7;
-            border-radius: 12px;
-            background: #fff;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        input:focus, select:focus {
+            border: 1px solid #D1D1D6;
+            border-radius: var(--border-radius);
+            background: var(--background-secondary);
+            font-size: 17px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
             outline: none;
-            border-color: #FF9500;
-            box-shadow: 0 0 0 3px rgba(255,149,0,0.1);
+            font-family: inherit;
         }
+
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+            transform: translateY(-1px);
+        }
+
         input[type="submit"] {
-            background: linear-gradient(135deg, #FF9500 0%, #FF6B35 100%);
+            background: var(--primary-color);
             color: #fff;
             border: none;
-            border-radius: 12px;
-            padding: 14px 24px;
+            border-radius: var(--border-radius);
+            padding: 16px 24px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(255,149,0,0.3);
+            font-size: 17px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            min-height: 50px;
         }
+
         input[type="submit"]:hover {
+            background: var(--primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(255,149,0,0.4);
+            box-shadow: var(--shadow-medium);
         }
+
         input[type="submit"]:active {
             transform: translateY(0);
         }
+
         input[type="submit"]:disabled {
-            background: #8e8e93;
+            background: var(--secondary-color);
             cursor: not-allowed;
             box-shadow: none;
             transform: none;
         }
+
         #remember_bssid, #sleep_mode {
             width: auto;
-            margin-right: 8px;
+            margin-right: 12px;
+            accent-color: var(--primary-color);
         }
 
         /* ========== AP List Styles ========== */
         #ap_list {
-            margin-top: 24px;
-            border-top: 1px solid #e1e5e9;
-            padding-top: 16px;
+            margin-top: 32px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            padding-top: 24px;
         }
+
         #ap_list .scanning {
             font-style: italic;
-            color: #888;
+            color: var(--text-secondary);
             animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
         #ap_list a {
             display: block;
-            margin-top: 8px;
-            color: #FF9500;
+            margin-top: 12px;
+            color: var(--primary-color);
             text-decoration: none;
-            padding: 12px 16px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 16px 20px;
+            background: var(--background-tertiary);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-large);
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: itemSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        #ap_list a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        #ap_list a:hover:before {
+            left: 100%;
+        }
+
         #ap_list a:hover {
-            background: #fff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: var(--background-secondary);
+            transform: translateY(-6px) scale(1.03) rotate(-1deg);
+            box-shadow: var(--shadow-large), 0 0 25px rgba(34, 197, 94, 0.15);
+            border-color: var(--primary-color);
         }
 
         /* ========== Language Switcher ========== */
         .language-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
         }
+
         .language-switch select {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #e1e5e9;
-            background: #fff;
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            background: var(--background-secondary);
+            backdrop-filter: blur(20px);
             font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            animation: float 6s ease-in-out infinite;
         }
+
         .language-switch select:focus {
-            outline: none;
-            border-color: #FF9500;
-            box-shadow: 0 0 0 3px rgba(255,149,0,0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1), var(--shadow-medium);
+            animation: none;
         }
 
         /* ========== Tab Styles ========== */
         .tabs {
             display: flex;
-            margin-top: 24px;
-            margin-bottom: 0;
-            padding-left: 20px;
-            border-bottom: 1px solid #e1e5e9;
+            margin-top: 32px;
+            margin-bottom: 24px;
+            padding-left: 32px;
+            border-bottom: 1px solid #D1D1D6;
         }
+
         .tab {
             padding: 12px 24px;
             cursor: pointer;
-            border: 1px solid #e1e5e9;
-            border-bottom: none;
-            border-radius: 12px 12px 0 0;
+            border: none;
+            border-radius: var(--border-radius);
             margin-right: 8px;
-            background: #f8f9fa;
-            position: relative;
-            top: 1px;
-            transition: all 0.3s ease;
+            background: transparent;
+            transition: var(--transition);
             font-weight: 500;
+            font-size: 17px;
+            color: var(--text-secondary);
+            position: relative;
         }
+
         .tab.active {
-            background: #fff;
-            color: #FF9500;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-light);
         }
-        .tab:hover {
-            background: #fff;
-            transform: translateY(-1px);
+
+        .tab:hover:not(.active) {
+            background: var(--background-tertiary);
+            color: var(--text-primary);
         }
+
         .tab-content {
             display: none;
-            border-top: none;
-            padding: 24px;
-            background: #fff;
-            border-radius: 0 12px 12px 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin: 0 20px 20px 20px;
+            padding: 32px;
+            background: var(--background-secondary);
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-light);
+            margin: 0 32px 32px 32px;
+            animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.5s ease;
         }
 
         /* Main content layout */
         .main-content {
             display: flex;
-            gap: 24px;
-            margin-top: 20px;
+            gap: 40px;
+            margin-top: 24px;
         }
+
         .left-panel {
             flex: 1;
         }
+
         .right-panel {
             flex: 1;
             max-width: 400px;
@@ -193,21 +282,26 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.8);
             background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
             color: white;
-            padding: 20px 32px;
-            border-radius: 16px;
+            padding: 24px 40px;
+            border-radius: var(--border-radius-large);
             z-index: 1000;
             opacity: 0;
-            transition: all 0.4s ease;
-            min-width: 250px;
+            transition: var(--transition);
+            min-width: 300px;
             text-align: center;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-large), 0 0 50px rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: toastBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+
         .toast.show {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
+            animation: toastBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         /* ========== Loading Spinner Styles ========== */
@@ -218,34 +312,39 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(4px);
         }
+
         .loading-overlay.show {
             display: flex;
             animation: fadeIn 0.3s ease;
         }
+
         .loading-spinner {
-            width: 64px;
-            height: 64px;
-            border: 6px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #FF9500;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 100px;
+            height: 100px;
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--primary-color);
+            border-radius: var(--border-radius-large);
+            animation: spin 1.2s linear infinite, pulse 2s ease-in-out infinite alternate;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
         }
+
         .loading-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 32px;
         }
+
         .loading-text {
             color: white;
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             animation: pulse 2s infinite;
         }
 
@@ -253,65 +352,109 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastBounce {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
 
-        /* ========== Dark Mode Toggle (Optional) ========== */
+        /* ========== Dark Mode Toggle ========== */
         .dark-mode-toggle {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            background: var(--background-secondary);
+            backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            border-radius: var(--border-radius-large);
+            width: 52px;
+            height: 52px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: buttonPulse 6s ease-in-out infinite;
         }
+
         .dark-mode-toggle:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(180deg);
+            box-shadow: var(--shadow-medium), 0 0 30px rgba(34, 197, 94, 0.2);
+            border-color: var(--primary-color);
+            animation: none;
+        }
+
+        .dark-mode-toggle svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-primary);
         }
 
         /* ========== Saved Wi-Fi Section ========== */
         .saved-wifi-section {
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            background: var(--background-secondary);
+            border-radius: var(--border-radius-large);
+            padding: 24px;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 24px;
+            border: 1px solid #D1D1D6;
         }
+
         .saved-wifi-section h3 {
-            margin: 0 0 16px 0;
-            color: #FF9500;
-            font-weight: 600;
-            font-size: 18px;
+            margin: 0 0 20px 0;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 20px;
         }
-        .saved-wifi-section ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+
         .saved-wifi-section li {
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border-left: 4px solid #FF9500;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            background: var(--background-tertiary);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            border: 1px solid #E5E5EA;
         }
+
         .saved-wifi-section li:hover {
-            background: #fff;
+            background: #F2F2F7;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-light);
         }
+
         .saved-wifi-section li:last-child {
             margin-bottom: 0;
         }
@@ -319,75 +462,160 @@
         /* ========== Main Content Layout ========== */
         .main-content {
             display: flex;
-            gap: 24px;
-            margin-top: 20px;
-            padding: 0 20px;
+            gap: 32px;
+            margin-top: 24px;
+            padding: 0 24px;
         }
+
         .left-panel {
             flex: 1;
-            min-width: 0; /* Prevent flex item from overflowing */
+            min-width: 0;
         }
+
         .right-panel {
-            flex: 0 0 380px; /* Fixed width for saved Wi-Fi panel */
-            max-width: 400px;
+            flex: 0 0 400px;
+            max-width: 420px;
+        }
+
+        /* ========== Dark Mode Styles ========== */
+        body.dark-mode {
+            --background-primary: #0f172a;
+            --background-secondary: #1e293b;
+            --background-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --shadow-light: 0 2px 8px rgba(34, 197, 94, 0.2);
+            --shadow-medium: 0 4px 16px rgba(34, 197, 94, 0.25);
+            --shadow-large: 0 8px 32px rgba(34, 197, 94, 0.3);
+        }
+
+        body.dark-mode input, body.dark-mode select {
+            background: var(--background-secondary);
+            border-color: #38383A;
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .saved-wifi-section {
+            background: var(--background-secondary);
+            border-color: #38383A;
+        }
+
+        body.dark-mode .saved-wifi-section li {
+            background: var(--background-tertiary);
+            border-color: #48484A;
+        }
+
+        body.dark-mode footer {
+            border-top-color: rgba(255, 255, 255, 0.1);
+            background: var(--background-secondary);
+        }
+
+        body.dark-mode footer a {
+            background: var(--background-tertiary);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        footer a:hover {
+            background: var(--background-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--primary-color);
+        }
+
+        body.dark-mode .tab-content {
+            background: var(--background-secondary);
+        }
+
+        body.dark-mode .dark-mode-toggle svg {
+            color: var(--text-primary);
         }
 
         /* ========== Responsive Design ========== */
         @media (max-width: 1024px) {
             .right-panel {
-                flex: 0 0 320px;
+                flex: 0 0 340px;
             }
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
             .main-content {
                 flex-direction: column;
-                gap: 16px;
-                padding: 0 10px;
+                gap: 20px;
+                padding: 0 16px;
             }
+
             .right-panel {
-                order: -1; /* Show saved Wi-Fi first on mobile */
+                order: -1;
                 flex: none;
                 max-width: unset;
             }
+
             .tabs {
-                padding-left: 10px;
+                padding-left: 16px;
             }
+
             .tab-content {
-                margin: 0 10px 10px 10px;
-                padding: 16px;
+                margin: 0 16px 16px 16px;
+                padding: 20px;
             }
+
             .language-switch {
-                top: 10px;
-                right: 10px;
+                top: 16px;
+                right: 16px;
             }
+
             .dark-mode-toggle {
-                top: 10px;
-                left: 10px;
+                top: 16px;
+                left: 16px;
+            }
+
+            .saved-wifi-section {
+                padding: 20px;
+            }
+
+            .saved-wifi-section h3 {
+                font-size: 18px;
             }
         }
 
         @media (max-width: 480px) {
-            .main-content {
-                padding: 0 5px;
-            }
-            .tabs {
-                padding-left: 5px;
-                margin-top: 16px;
-            }
-            .tab-content {
-                margin: 0 5px 10px 5px;
+            body {
                 padding: 12px;
             }
-            .language-switch select {
-                font-size: 12px;
-                padding: 6px 8px;
+
+            .main-content {
+                padding: 0 12px;
             }
+
+            .tabs {
+                padding-left: 12px;
+                margin-top: 20px;
+            }
+
+            .tab-content {
+                margin: 0 12px 12px 12px;
+                padding: 16px;
+            }
+
+            .language-switch select {
+                font-size: 13px;
+                padding: 10px 14px;
+            }
+
             .saved-wifi-section {
                 padding: 16px;
             }
+
             .saved-wifi-section h3 {
                 font-size: 16px;
+            }
+
+            h3 {
+                font-size: 20px;
             }
         }
     </style>
@@ -409,9 +637,15 @@
         <select id="language" onchange="changeLanguage()">
             <option value="vi-VN">Tiếng Việt</option>
             <option value="en-US">English</option>
-            <option value="zh-CN">简体中文</option>
         </select>
     </div>
+    
+    <!-- Dark mode toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+    </button>
     
     <!-- Tabs -->
     <div class="tabs">
@@ -458,6 +692,15 @@
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <input type="text" id="ota_url" name="ota_url" style="flex: 1;">
                                 <button type="button" onclick="clearOtaUrl()" style="padding: 8px 12px; border: 1px solid #e1e5e9; border-radius: 8px; background-color: #f8f9fa; color: #666; cursor: pointer; font-size: 12px; transition: all 0.3s ease;">Clear</button>
+                            </div>
+                        </p>
+
+                        <!-- Google Sheet URL -->
+                        <p>
+                            <label for="google_sheet_url" data-lang="google_sheet_url">Google Sheet URL:</label>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="text" id="google_sheet_url" name="google_sheet_url" style="flex: 1;">
+                                <button type="button" onclick="clearGoogleSheetUrl()" style="padding: 8px 12px; border: 1px solid #e1e5e9; border-radius: 8px; background-color: #f8f9fa; color: #666; cursor: pointer; font-size: 12px; transition: all 0.3s ease;">Clear</button>
                             </div>
                         </p>
 
@@ -512,6 +755,18 @@
                         <li><span data-lang="no_saved_wifi">No saved Wi-Fi networks</span></li>
                     </ul>
                 </div>
+
+                <!-- Footer -->
+                <footer style="margin-top: 32px; padding: 24px 16px; border-top: 2px solid rgba(0, 0, 0, 0.1); text-align: center; font-size: 14px; color: var(--text-primary); background: var(--background-secondary); border-radius: var(--border-radius-large); box-shadow: var(--shadow-light);">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                        <a href="https://www.facebook.com/kurtt806" target="_blank" style="color: #1877F2; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: var(--border-radius); background: var(--background-tertiary); transition: var(--transition); font-weight: 600; font-size: 16px; box-shadow: var(--shadow-light); border: 1px solid rgba(0, 0, 0, 0.05);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            KH OA
+                        </a>
+                    </div>
+                </footer>
             </div>
         </div>
     </div>
@@ -524,637 +779,6 @@
 
         // ========== Translation Data ==========
         const translations = {
-            'ar-SA': {
-                title: 'تكوين الشبكة',
-                saved_wifi: 'Wi-Fi المحفوظة',
-                new_wifi: 'Wi-Fi جديد',
-                password: 'كلمة المرور:',
-                connect: 'اتصال',
-                connecting: 'جارٍ الاتصال...',
-                select_wifi: 'حدد Wi-Fi 2.4G من القائمة أدناه:',
-                select_wifi_5g: 'حدد Wi-Fi من القائمة أدناه:',
-                scanning: 'جارٍ المسح...',
-                wifi_tab: 'تكوين Wi-Fi',
-                advanced_tab: 'خيارات متقدمة',
-                ota_url: 'عنوان OTA مخصص:',
-                max_tx_power: 'أقصى قوة إرسال Wi-Fi:',
-                remember_bssid: 'تذكر BSSID عند الاتصال بـ Wi-Fi',
-                sleep_mode: 'تمكين وضع السكون',
-                save: 'حفظ'
-            },
-            'bg-BG': {
-                title: 'Конфигурация на мрежата',
-                saved_wifi: 'Запазени Wi-Fi',
-                new_wifi: 'Нов Wi-Fi',
-                password: 'Парола:',
-                connect: 'Свързване',
-                connecting: 'Свързване...',
-                select_wifi: 'Изберете 2.4G Wi-Fi от списъка по-долу:',
-                select_wifi_5g: 'Изберете Wi-Fi от списъка по-долу:',
-                scanning: 'Сканиране...',
-                wifi_tab: 'Конфигурация на Wi-Fi',
-                advanced_tab: 'Разширени',
-                ota_url: 'Персонализиран OTA URL:',
-                max_tx_power: 'Макс. мощност на предаване Wi-Fi:',
-                remember_bssid: 'Запомни BSSID при свързване към Wi-Fi',
-                sleep_mode: 'Активиране на режим на заспиване',
-                save: 'Запазване'
-            },
-            'ca-ES': {
-                title: 'Configuració de xarxa',
-                saved_wifi: 'Wi-Fi desats',
-                new_wifi: 'Nou Wi-Fi',
-                password: 'Contrasenya:',
-                connect: 'Connectar',
-                connecting: 'Connectant...',
-                select_wifi: 'Selecciona un Wi-Fi 2.4G de la llista següent:',
-                select_wifi_5g: 'Selecciona un Wi-Fi de la llista següent:',
-                scanning: 'Escanejant...',
-                wifi_tab: 'Configuració Wi-Fi',
-                advanced_tab: 'Avançat',
-                ota_url: 'URL OTA personalitzat:',
-                max_tx_power: 'Potència màxima TX Wi-Fi:',
-                remember_bssid: 'Recordar BSSID en connectar a Wi-Fi',
-                sleep_mode: 'Activar mode de suspensió',
-                save: 'Desar'
-            },
-            'cs-CZ': {
-                title: 'Konfigurace sítě',
-                saved_wifi: 'Uložené Wi-Fi',
-                new_wifi: 'Nové Wi-Fi',
-                password: 'Heslo:',
-                connect: 'Připojit',
-                connecting: 'Připojování...',
-                select_wifi: 'Vyberte 2.4G Wi-Fi ze seznamu níže:',
-                select_wifi_5g: 'Vyberte Wi-Fi ze seznamu níže:',
-                scanning: 'Skenování...',
-                wifi_tab: 'Konfigurace Wi-Fi',
-                advanced_tab: 'Pokročilé',
-                ota_url: 'Vlastní OTA URL:',
-                max_tx_power: 'Max. vysílací výkon Wi-Fi:',
-                remember_bssid: 'Pamatovat si BSSID při připojení k Wi-Fi',
-                sleep_mode: 'Povolit režim spánku',
-                save: 'Uložit'
-            },
-            'da-DK': {
-                title: 'Netværkskonfiguration',
-                saved_wifi: 'Gemte Wi-Fi',
-                new_wifi: 'Ny Wi-Fi',
-                password: 'Adgangskode:',
-                connect: 'Forbind',
-                connecting: 'Forbinder...',
-                select_wifi: 'Vælg en 2.4G Wi-Fi fra listen nedenfor:',
-                select_wifi_5g: 'Vælg en Wi-Fi fra listen nedenfor:',
-                scanning: 'Scanner...',
-                wifi_tab: 'Wi-Fi-konfiguration',
-                advanced_tab: 'Avanceret',
-                ota_url: 'Brugerdefineret OTA URL:',
-                max_tx_power: 'Wi-Fi maks. TX-effekt:',
-                remember_bssid: 'Husk BSSID ved forbindelse til Wi-Fi',
-                sleep_mode: 'Aktiver dvaletilstand',
-                save: 'Gem'
-            },
-            'de-DE': {
-                title: 'Netzwerk-Konfiguration',
-                saved_wifi: 'Gespeicherte Wi-Fi-Verbindungen',
-                new_wifi: 'Neue Wi-Fi-Verbindung',
-                password: 'Passwort:',
-                connect: 'Verbinden',
-                connecting: 'Verbindung wird hergestellt...',
-                select_wifi: 'Wähle ein 2.4G Wi-Fi aus der Liste:',
-                select_wifi_5g: 'Wähle ein Wi-Fi aus der Liste:',
-                scanning: 'Scanne...',
-                wifi_tab: 'Wi-Fi-Konfiguration',
-                advanced_tab: 'Erweitert',
-                ota_url: 'Benutzerdefinierte OTA-URL:',
-                max_tx_power: 'Wi-Fi Max. Sendeleistung:',
-                remember_bssid: 'BSSID beim Verbinden mit Wi-Fi merken',
-                sleep_mode: 'Schlafmodus aktivieren',
-                save: 'Speichern'
-            },
-            'el-GR': {
-                title: 'Διαμόρφωση δικτύου',
-                saved_wifi: 'Αποθηκευμένα Wi-Fi',
-                new_wifi: 'Νέο Wi-Fi',
-                password: 'Κωδικός πρόσβασης:',
-                connect: 'Σύνδεση',
-                connecting: 'Σύνδεση...',
-                select_wifi: 'Επιλέξτε ένα 2.4G Wi-Fi από την παρακάτω λίστα:',
-                select_wifi_5g: 'Επιλέξτε ένα Wi-Fi από την παρακάτω λίστα:',
-                scanning: 'Σάρωση...',
-                wifi_tab: 'Διαμόρφωση Wi-Fi',
-                advanced_tab: 'Για προχωρημένους',
-                ota_url: 'Προσαρμοσμένη διεύθυνση OTA:',
-                max_tx_power: 'Μέγιστη ισχύς μετάδοσης Wi-Fi:',
-                remember_bssid: 'Απομνημόνευση BSSID κατά τη σύνδεση σε Wi-Fi',
-                sleep_mode: 'Ενεργοποίηση λειτουργίας αναστολής',
-                save: 'Αποθήκευση'
-            },
-            'en-US': {
-                title: 'Network Configuration',
-                saved_wifi: 'Saved Wi-Fi',
-                new_wifi: 'New Wi-Fi',
-                password: 'Password:',
-                connect: 'Connect',
-                connecting: 'Connecting...',
-                select_wifi: 'Select a 2.4G Wi-Fi from the list below:',
-                select_wifi_5g: 'Select a Wi-Fi from the list below:',
-                scanning: 'Scanning...',
-                wifi_tab: 'Wi-Fi Config',
-                advanced_tab: 'Advanced',
-                ota_url: 'Custom OTA URL:',
-                max_tx_power: 'Wi-Fi Max TX Power:',
-                remember_bssid: 'Remember BSSID when connecting to Wi-Fi',
-                sleep_mode: 'Enable Sleep Mode',
-                save: 'Save',
-                no_saved_wifi: 'No saved Wi-Fi networks'
-            },
-            'es-ES': {
-                title: 'Configuración de red',
-                saved_wifi: 'Wi-Fi guardados',
-                new_wifi: 'Nuevo Wi-Fi',
-                password: 'Contraseña:',
-                connect: 'Conectar',
-                connecting: 'Conectando...',
-                select_wifi: 'Seleccione un Wi-Fi 2.4G de la lista a continuación:',
-                select_wifi_5g: 'Seleccione un Wi-Fi de la lista a continuación:',
-                scanning: 'Escaneando...',
-                wifi_tab: 'Configuración Wi-Fi',
-                advanced_tab: 'Avanzado',
-                ota_url: 'URL OTA personalizada:',
-                max_tx_power: 'Potencia máxima TX Wi-Fi:',
-                remember_bssid: 'Recordar BSSID al conectarse a Wi-Fi',
-                sleep_mode: 'Activar modo de suspensión',
-                save: 'Guardar'
-            },
-            'fa-IR': {
-                title: 'پیکربندی شبکه',
-                saved_wifi: 'Wi-Fi ذخیره شده',
-                new_wifi: 'Wi-Fi جدید',
-                password: 'رمز عبور:',
-                connect: 'اتصال',
-                connecting: 'در حال اتصال...',
-                select_wifi: 'یک Wi-Fi 2.4G از لیست زیر انتخاب کنید:',
-                select_wifi_5g: 'یک Wi-Fi از لیست زیر انتخاب کنید:',
-                scanning: 'در حال اسکن...',
-                wifi_tab: 'پیکربندی Wi-Fi',
-                advanced_tab: 'پیشرفته',
-                ota_url: 'آدرس OTA سفارشی:',
-                max_tx_power: 'حداکثر قدرت انتقال Wi-Fi:',
-                remember_bssid: 'به خاطر سپردن BSSID هنگام اتصال به Wi-Fi',
-                sleep_mode: 'فعال کردن حالت خواب',
-                save: 'ذخیره'
-            },
-            'fi-FI': {
-                title: 'Verkon määritys',
-                saved_wifi: 'Tallennetut Wi-Fi',
-                new_wifi: 'Uusi Wi-Fi',
-                password: 'Salasana:',
-                connect: 'Yhdistä',
-                connecting: 'Yhdistetään...',
-                select_wifi: 'Valitse 2.4G Wi-Fi alla olevasta luettelosta:',
-                select_wifi_5g: 'Valitse Wi-Fi alla olevasta luettelosta:',
-                scanning: 'Etsitään...',
-                wifi_tab: 'Wi-Fi-määritys',
-                advanced_tab: 'Lisäasetukset',
-                ota_url: 'Mukautettu OTA-osoite:',
-                max_tx_power: 'Wi-Fi maks. lähetysteho:',
-                remember_bssid: 'Muista BSSID yhdistettäessä Wi-Fi-verkkoon',
-                sleep_mode: 'Ota lepotila käyttöön',
-                save: 'Tallenna'
-            },
-            'fil-PH': {
-                title: 'Pagsasaayos ng Network',
-                saved_wifi: 'Naka-save na Wi-Fi',
-                new_wifi: 'Bagong Wi-Fi',
-                password: 'Password:',
-                connect: 'Kumonekta',
-                connecting: 'Kumukonekta...',
-                select_wifi: 'Pumili ng 2.4G Wi-Fi mula sa listahan sa ibaba:',
-                select_wifi_5g: 'Pumili ng Wi-Fi mula sa listahan sa ibaba:',
-                scanning: 'Nag-scan...',
-                wifi_tab: 'Pagsasaayos ng Wi-Fi',
-                advanced_tab: 'Advanced',
-                ota_url: 'Custom OTA URL:',
-                max_tx_power: 'Wi-Fi Max TX Power:',
-                remember_bssid: 'Tandaan ang BSSID kapag kumokonekta sa Wi-Fi',
-                sleep_mode: 'I-enable ang Sleep Mode',
-                save: 'I-save'
-            },
-            'fr-FR': {
-                title: 'Configuration réseau',
-                saved_wifi: 'Wi-Fi enregistrés',
-                new_wifi: 'Nouveau Wi-Fi',
-                password: 'Mot de passe:',
-                connect: 'Connecter',
-                connecting: 'Connexion en cours...',
-                select_wifi: 'Sélectionnez un Wi-Fi 2.4G dans la liste ci-dessous:',
-                select_wifi_5g: 'Sélectionnez un Wi-Fi dans la liste ci-dessous:',
-                scanning: 'Analyse en cours...',
-                wifi_tab: 'Configuration Wi-Fi',
-                advanced_tab: 'Avancé',
-                ota_url: 'URL OTA personnalisée:',
-                max_tx_power: 'Puissance TX maximale Wi-Fi:',
-                remember_bssid: 'Mémoriser le BSSID lors de la connexion au Wi-Fi',
-                sleep_mode: 'Activer le mode veille',
-                save: 'Enregistrer'
-            },
-            'he-IL': {
-                title: 'הגדרות רשת',
-                saved_wifi: 'Wi-Fi שמורים',
-                new_wifi: 'Wi-Fi חדש',
-                password: 'סיסמה:',
-                connect: 'התחבר',
-                connecting: 'מתחבר...',
-                select_wifi: 'בחר Wi-Fi 2.4G מהרשימה למטה:',
-                select_wifi_5g: 'בחר Wi-Fi מהרשימה למטה:',
-                scanning: 'סורק...',
-                wifi_tab: 'הגדרות Wi-Fi',
-                advanced_tab: 'מתקדם',
-                ota_url: 'כתובת OTA מותאמת אישית:',
-                max_tx_power: 'הספק שידור מקסימלי Wi-Fi:',
-                remember_bssid: 'זכור BSSID בעת התחברות ל-Wi-Fi',
-                sleep_mode: 'הפעל מצב שינה',
-                save: 'שמור'
-            },
-            'hi-IN': {
-                title: 'नेटवर्क कॉन्फ़िगरेशन',
-                saved_wifi: 'सहेजे गए Wi-Fi',
-                new_wifi: 'नया Wi-Fi',
-                password: 'पासवर्ड:',
-                connect: 'कनेक्ट करें',
-                connecting: 'कनेक्ट हो रहा है...',
-                select_wifi: 'नीचे दी गई सूची से 2.4G Wi-Fi चुनें:',
-                select_wifi_5g: 'नीचे दी गई सूची से Wi-Fi चुनें:',
-                scanning: 'स्कैन कर रहा है...',
-                wifi_tab: 'Wi-Fi कॉन्फ़िगरेशन',
-                advanced_tab: 'उन्नत',
-                ota_url: 'कस्टम OTA URL:',
-                max_tx_power: 'Wi-Fi अधिकतम TX पावर:',
-                remember_bssid: 'Wi-Fi से कनेक्ट करते समय BSSID याद रखें',
-                sleep_mode: 'स्लीप मोड सक्षम करें',
-                save: 'सहेजें'
-            },
-            'hr-HR': {
-                title: 'Konfiguracija mreže',
-                saved_wifi: 'Spremljene Wi-Fi mreže',
-                new_wifi: 'Nova Wi-Fi mreža',
-                password: 'Lozinka:',
-                connect: 'Poveži',
-                connecting: 'Povezivanje...',
-                select_wifi: 'Odaberite 2.4G Wi-Fi s popisa ispod:',
-                select_wifi_5g: 'Odaberite Wi-Fi s popisa ispod:',
-                scanning: 'Skeniranje...',
-                wifi_tab: 'Konfiguracija Wi-Fi',
-                advanced_tab: 'Napredno',
-                ota_url: 'Prilagođeni OTA URL:',
-                max_tx_power: 'Wi-Fi maksimalna TX snaga:',
-                remember_bssid: 'Zapamti BSSID pri povezivanju na Wi-Fi',
-                sleep_mode: 'Omogući način spavanja',
-                save: 'Spremi'
-            },
-            'hu-HU': {
-                title: 'Hálózati konfiguráció',
-                saved_wifi: 'Mentett Wi-Fi hálózatok',
-                new_wifi: 'Új Wi-Fi hálózat',
-                password: 'Jelszó:',
-                connect: 'Csatlakozás',
-                connecting: 'Csatlakozás...',
-                select_wifi: 'Válasszon egy 2.4G Wi-Fi hálózatot az alábbi listából:',
-                select_wifi_5g: 'Válasszon egy Wi-Fi hálózatot az alábbi listából:',
-                scanning: 'Keresés...',
-                wifi_tab: 'Wi-Fi konfiguráció',
-                advanced_tab: 'Speciális',
-                ota_url: 'Egyéni OTA URL:',
-                max_tx_power: 'Wi-Fi max. adási teljesítmény:',
-                remember_bssid: 'BSSID megjegyzése Wi-Fi csatlakozáskor',
-                sleep_mode: 'Alvó mód engedélyezése',
-                save: 'Mentés'
-            },
-            'id-ID': {
-                title: 'Konfigurasi Jaringan',
-                saved_wifi: 'Wi-Fi Tersimpan',
-                new_wifi: 'Wi-Fi Baru',
-                password: 'Kata Sandi:',
-                connect: 'Hubungkan',
-                connecting: 'Menghubungkan...',
-                select_wifi: 'Pilih Wi-Fi 2.4G dari daftar di bawah:',
-                select_wifi_5g: 'Pilih Wi-Fi dari daftar di bawah:',
-                scanning: 'Memindai...',
-                wifi_tab: 'Konfigurasi Wi-Fi',
-                advanced_tab: 'Lanjutan',
-                ota_url: 'URL OTA Kustom:',
-                max_tx_power: 'Daya Pancar Maks Wi-Fi:',
-                remember_bssid: 'Ingat BSSID saat menghubungkan ke Wi-Fi',
-                sleep_mode: 'Aktifkan Mode Tidur',
-                save: 'Simpan'
-            },
-            'it-IT': {
-                title: 'Configurazione di rete',
-                saved_wifi: 'Wi-Fi salvate',
-                new_wifi: 'Nuova Wi-Fi',
-                password: 'Password:',
-                connect: 'Connetti',
-                connecting: 'Connessione in corso...',
-                select_wifi: 'Seleziona una Wi-Fi 2.4G dall\'elenco sottostante:',
-                select_wifi_5g: 'Seleziona una Wi-Fi dall\'elenco sottostante:',
-                scanning: 'Scansione in corso...',
-                wifi_tab: 'Configurazione Wi-Fi',
-                advanced_tab: 'Avanzate',
-                ota_url: 'URL OTA personalizzato:',
-                max_tx_power: 'Potenza TX massima Wi-Fi:',
-                remember_bssid: 'Ricorda BSSID durante la connessione al Wi-Fi',
-                sleep_mode: 'Abilita modalità sospensione',
-                save: 'Salva'
-            },
-            'ja-JP': {
-                title: 'ネットワーク設定',
-                saved_wifi: '保存済みのWi-Fi',
-                new_wifi: '新しいWi-Fi',
-                password: 'パスワード:',
-                connect: '接続',
-                connecting: '接続中...',
-                select_wifi: '以下のリストから2.4G Wi-Fiを選択してください:',
-                select_wifi_5g: '以下のリストからWi-Fiを選択してください:',
-                scanning: 'スキャン中...',
-                wifi_tab: 'Wi-Fi設定',
-                advanced_tab: '詳細設定',
-                ota_url: 'カスタムOTA URL:',
-                max_tx_power: 'Wi-Fi最大送信電力:',
-                remember_bssid: 'Wi-Fi接続時にBSSIDを記憶する',
-                sleep_mode: 'スリープモードを有効にする',
-                save: '保存'
-            },
-            'ko-KR': {
-                title: '네트워크 구성',
-                saved_wifi: '저장된 Wi-Fi',
-                new_wifi: '새 Wi-Fi',
-                password: '비밀번호:',
-                connect: '연결',
-                connecting: '연결 중...',
-                select_wifi: '아래 목록에서 2.4G Wi-Fi를 선택하세요:',
-                select_wifi_5g: '아래 목록에서 Wi-Fi를 선택하세요:',
-                scanning: '스캔 중...',
-                wifi_tab: 'Wi-Fi 구성',
-                advanced_tab: '고급',
-                ota_url: '사용자 정의 OTA URL:',
-                max_tx_power: 'Wi-Fi 최대 송신 전력:',
-                remember_bssid: 'Wi-Fi 연결 시 BSSID 기억',
-                sleep_mode: '절전 모드 활성화',
-                save: '저장'
-            },
-            'ms-MY': {
-                title: 'Konfigurasi Rangkaian',
-                saved_wifi: 'Wi-Fi Tersimpan',
-                new_wifi: 'Wi-Fi Baharu',
-                password: 'Kata Laluan:',
-                connect: 'Sambung',
-                connecting: 'Menyambung...',
-                select_wifi: 'Pilih Wi-Fi 2.4G dari senarai di bawah:',
-                select_wifi_5g: 'Pilih Wi-Fi dari senarai di bawah:',
-                scanning: 'Mengimbas...',
-                wifi_tab: 'Konfigurasi Wi-Fi',
-                advanced_tab: 'Lanjutan',
-                ota_url: 'URL OTA Tersuai:',
-                max_tx_power: 'Kuasa TX Maksimum Wi-Fi:',
-                remember_bssid: 'Ingat BSSID semasa menyambung ke Wi-Fi',
-                sleep_mode: 'Dayakan Mod Tidur',
-                save: 'Simpan'
-            },
-            'nb-NO': {
-                title: 'Nettverkskonfigurasjon',
-                saved_wifi: 'Lagrede Wi-Fi',
-                new_wifi: 'Nytt Wi-Fi',
-                password: 'Passord:',
-                connect: 'Koble til',
-                connecting: 'Kobler til...',
-                select_wifi: 'Velg et 2.4G Wi-Fi fra listen nedenfor:',
-                select_wifi_5g: 'Velg et Wi-Fi fra listen nedenfor:',
-                scanning: 'Skanner...',
-                wifi_tab: 'Wi-Fi-konfigurasjon',
-                advanced_tab: 'Avansert',
-                ota_url: 'Egendefinert OTA-URL:',
-                max_tx_power: 'Wi-Fi maks. sendeeffekt:',
-                remember_bssid: 'Husk BSSID ved tilkobling til Wi-Fi',
-                sleep_mode: 'Aktiver hvilemodus',
-                save: 'Lagre'
-            },
-            'nl-NL': {
-                title: 'Netwerkconfiguratie',
-                saved_wifi: 'Opgeslagen Wi-Fi',
-                new_wifi: 'Nieuwe Wi-Fi',
-                password: 'Wachtwoord:',
-                connect: 'Verbinden',
-                connecting: 'Verbinden...',
-                select_wifi: 'Selecteer een 2.4G Wi-Fi uit de onderstaande lijst:',
-                select_wifi_5g: 'Selecteer een Wi-Fi uit de onderstaande lijst:',
-                scanning: 'Scannen...',
-                wifi_tab: 'Wi-Fi-configuratie',
-                advanced_tab: 'Geavanceerd',
-                ota_url: 'Aangepaste OTA-URL:',
-                max_tx_power: 'Wi-Fi max. zendvermogen:',
-                remember_bssid: 'BSSID onthouden bij verbinden met Wi-Fi',
-                sleep_mode: 'Slaapmodus inschakelen',
-                save: 'Opslaan'
-            },
-            'pl-PL': {
-                title: 'Konfiguracja sieci',
-                saved_wifi: 'Zapisane Wi-Fi',
-                new_wifi: 'Nowe Wi-Fi',
-                password: 'Hasło:',
-                connect: 'Połącz',
-                connecting: 'Łączenie...',
-                select_wifi: 'Wybierz Wi-Fi 2.4G z poniższej listy:',
-                select_wifi_5g: 'Wybierz Wi-Fi z poniższej listy:',
-                scanning: 'Skanowanie...',
-                wifi_tab: 'Konfiguracja Wi-Fi',
-                advanced_tab: 'Zaawansowane',
-                ota_url: 'Niestandardowy adres URL OTA:',
-                max_tx_power: 'Maksymalna moc nadawania Wi-Fi:',
-                remember_bssid: 'Zapamiętaj BSSID podczas łączenia z Wi-Fi',
-                sleep_mode: 'Włącz tryb uśpienia',
-                save: 'Zapisz'
-            },
-            'pt-PT': {
-                title: 'Configuração de rede',
-                saved_wifi: 'Wi-Fi guardadas',
-                new_wifi: 'Nova Wi-Fi',
-                password: 'Palavra-passe:',
-                connect: 'Ligar',
-                connecting: 'A ligar...',
-                select_wifi: 'Selecione uma Wi-Fi 2.4G da lista abaixo:',
-                select_wifi_5g: 'Selecione uma Wi-Fi da lista abaixo:',
-                scanning: 'A procurar...',
-                wifi_tab: 'Configuração Wi-Fi',
-                advanced_tab: 'Avançado',
-                ota_url: 'URL OTA personalizado:',
-                max_tx_power: 'Potência TX máxima Wi-Fi:',
-                remember_bssid: 'Lembrar BSSID ao ligar ao Wi-Fi',
-                sleep_mode: 'Ativar modo de suspensão',
-                save: 'Guardar'
-            },
-            'ro-RO': {
-                title: 'Configurare rețea',
-                saved_wifi: 'Wi-Fi salvate',
-                new_wifi: 'Wi-Fi nou',
-                password: 'Parolă:',
-                connect: 'Conectare',
-                connecting: 'Se conectează...',
-                select_wifi: 'Selectați o Wi-Fi 2.4G din lista de mai jos:',
-                select_wifi_5g: 'Selectați o Wi-Fi din lista de mai jos:',
-                scanning: 'Se scanează...',
-                wifi_tab: 'Configurare Wi-Fi',
-                advanced_tab: 'Avansat',
-                ota_url: 'URL OTA personalizat:',
-                max_tx_power: 'Putere maximă TX Wi-Fi:',
-                remember_bssid: 'Reține BSSID la conectarea la Wi-Fi',
-                sleep_mode: 'Activează modul de repaus',
-                save: 'Salvare'
-            },
-            'ru-RU': {
-                title: 'Настройка сети',
-                saved_wifi: 'Сохраненные Wi-Fi',
-                new_wifi: 'Новая Wi-Fi',
-                password: 'Пароль:',
-                connect: 'Подключить',
-                connecting: 'Подключение...',
-                select_wifi: 'Выберите Wi-Fi 2.4G из списка ниже:',
-                select_wifi_5g: 'Выберите Wi-Fi из списка ниже:',
-                scanning: 'Сканирование...',
-                wifi_tab: 'Настройка Wi-Fi',
-                advanced_tab: 'Дополнительно',
-                ota_url: 'Пользовательский URL OTA:',
-                max_tx_power: 'Макс. мощность передачи Wi-Fi:',
-                remember_bssid: 'Запомнить BSSID при подключении к Wi-Fi',
-                sleep_mode: 'Включить режим сна',
-                save: 'Сохранить'
-            },
-            'sk-SK': {
-                title: 'Konfigurácia siete',
-                saved_wifi: 'Uložené Wi-Fi',
-                new_wifi: 'Nové Wi-Fi',
-                password: 'Heslo:',
-                connect: 'Pripojiť',
-                connecting: 'Pripájanie...',
-                select_wifi: 'Vyberte 2.4G Wi-Fi zo zoznamu nižšie:',
-                select_wifi_5g: 'Vyberte Wi-Fi zo zoznamu nižšie:',
-                scanning: 'Skenovanie...',
-                wifi_tab: 'Konfigurácia Wi-Fi',
-                advanced_tab: 'Pokročilé',
-                ota_url: 'Vlastná URL OTA:',
-                max_tx_power: 'Max. vysielací výkon Wi-Fi:',
-                remember_bssid: 'Zapamätať si BSSID pri pripojení k Wi-Fi',
-                sleep_mode: 'Povoliť režim spánku',
-                save: 'Uložiť'
-            },
-            'sl-SI': {
-                title: 'Konfiguracija omrežja',
-                saved_wifi: 'Shranjeni Wi-Fi',
-                new_wifi: 'Nov Wi-Fi',
-                password: 'Geslo:',
-                connect: 'Poveži',
-                connecting: 'Povezovanje...',
-                select_wifi: 'Izberite 2.4G Wi-Fi s spodnjega seznama:',
-                select_wifi_5g: 'Izberite Wi-Fi s spodnjega seznama:',
-                scanning: 'Iskanje...',
-                wifi_tab: 'Konfiguracija Wi-Fi',
-                advanced_tab: 'Napredno',
-                ota_url: 'Prilagojen URL OTA:',
-                max_tx_power: 'Wi-Fi maks. oddajna moč:',
-                remember_bssid: 'Zapomni si BSSID ob povezovanju na Wi-Fi',
-                sleep_mode: 'Omogoči način spanja',
-                save: 'Shrani'
-            },
-            'sr-RS': {
-                title: 'Конфигурација мреже',
-                saved_wifi: 'Сачуване Wi-Fi мреже',
-                new_wifi: 'Нова Wi-Fi мрежа',
-                password: 'Лозинка:',
-                connect: 'Повежи',
-                connecting: 'Повезивање...',
-                select_wifi: 'Изаберите 2.4G Wi-Fi са листе испод:',
-                select_wifi_5g: 'Изаберите Wi-Fi са листе испод:',
-                scanning: 'Скенирање...',
-                wifi_tab: 'Конфигурација Wi-Fi',
-                advanced_tab: 'Напредно',
-                ota_url: 'Прилагођени OTA URL:',
-                max_tx_power: 'Wi-Fi максимална снага преноса:',
-                remember_bssid: 'Запамти BSSID приликом повезивања на Wi-Fi',
-                sleep_mode: 'Омогући режим спавања',
-                save: 'Сачувај'
-            },
-            'sv-SE': {
-                title: 'Nätverkskonfiguration',
-                saved_wifi: 'Sparade Wi-Fi',
-                new_wifi: 'Nytt Wi-Fi',
-                password: 'Lösenord:',
-                connect: 'Anslut',
-                connecting: 'Ansluter...',
-                select_wifi: 'Välj ett 2.4G Wi-Fi från listan nedan:',
-                select_wifi_5g: 'Välj ett Wi-Fi från listan nedan:',
-                scanning: 'Söker...',
-                wifi_tab: 'Wi-Fi-konfiguration',
-                advanced_tab: 'Avancerat',
-                ota_url: 'Anpassad OTA-URL:',
-                max_tx_power: 'Wi-Fi max. sändningseffekt:',
-                remember_bssid: 'Kom ihåg BSSID vid anslutning till Wi-Fi',
-                sleep_mode: 'Aktivera viloläge',
-                save: 'Spara'
-            },
-            'th-TH': {
-                title: 'การกำหนดค่าเครือข่าย',
-                saved_wifi: 'Wi-Fi ที่บันทึกไว้',
-                new_wifi: 'Wi-Fi ใหม่',
-                password: 'รหัสผ่าน:',
-                connect: 'เชื่อมต่อ',
-                connecting: 'กำลังเชื่อมต่อ...',
-                select_wifi: 'เลือก Wi-Fi 2.4G จากรายการด้านล่าง:',
-                select_wifi_5g: 'เลือก Wi-Fi จากรายการด้านล่าง:',
-                scanning: 'กำลังสแกน...',
-                wifi_tab: 'การกำหนดค่า Wi-Fi',
-                advanced_tab: 'ขั้นสูง',
-                ota_url: 'URL OTA กำหนดเอง:',
-                max_tx_power: 'กำลังส่งสูงสุด Wi-Fi:',
-                remember_bssid: 'จำ BSSID เมื่อเชื่อมต่อกับ Wi-Fi',
-                sleep_mode: 'เปิดใช้งานโหมดสลีป',
-                save: 'บันทึก'
-            },
-            'tr-TR': {
-                title: 'Ağ Yapılandırması',
-                saved_wifi: 'Kaydedilmiş Wi-Fi',
-                new_wifi: 'Yeni Wi-Fi',
-                password: 'Şifre:',
-                connect: 'Bağlan',
-                connecting: 'Bağlanıyor...',
-                select_wifi: 'Aşağıdaki listeden bir 2.4G Wi-Fi seçin:',
-                select_wifi_5g: 'Aşağıdaki listeden bir Wi-Fi seçin:',
-                scanning: 'Taranıyor...',
-                wifi_tab: 'Wi-Fi Yapılandırması',
-                advanced_tab: 'Gelişmiş',
-                ota_url: 'Özel OTA URL:',
-                max_tx_power: 'Wi-Fi Maks. İletim Gücü:',
-                remember_bssid: 'Wi-Fi\'ye bağlanırken BSSID\'yi hatırla',
-                sleep_mode: 'Uyku Modunu Etkinleştir',
-                save: 'Kaydet'
-            },
-            'uk-UA': {
-                title: 'Налаштування мережі',
-                saved_wifi: 'Збережені Wi-Fi',
-                new_wifi: 'Нова Wi-Fi',
-                password: 'Пароль:',
-                connect: 'Підключити',
-                connecting: 'Підключення...',
-                select_wifi: 'Виберіть Wi-Fi 2.4G зі списку нижче:',
-                select_wifi_5g: 'Виберіть Wi-Fi зі списку нижче:',
-                scanning: 'Сканування...',
-                wifi_tab: 'Налаштування Wi-Fi',
-                advanced_tab: 'Додатково',
-                ota_url: 'Користувацька URL-адреса OTA:',
-                max_tx_power: 'Макс. потужність передачі Wi-Fi:',
-                remember_bssid: 'Запам\'ятати BSSID при підключенні до Wi-Fi',
-                sleep_mode: 'Увімкнути режим сну',
-                save: 'Зберегти'
-            },
             'vi-VN': {
                 title: 'Cấu hình mạng',
                 saved_wifi: 'Wi-Fi đã lưu',
@@ -1168,6 +792,7 @@
                 wifi_tab: 'Cấu hình Wi-Fi',
                 advanced_tab: 'Tùy chọn nâng cao',
                 ota_url: 'Địa chỉ OTA tùy chỉnh:',
+                google_sheet_url: 'Địa chỉ Google Sheet:',
                 max_tx_power: 'Công suất phát Wi-Fi tối đa:',
                 remember_bssid: 'Ghi nhớ BSSID khi kết nối với Wi-Fi',
                 sleep_mode: 'Bật chế độ ngủ',
@@ -1187,29 +812,11 @@
                 wifi_tab: 'Wi-Fi Config',
                 advanced_tab: 'Advanced',
                 ota_url: 'Custom OTA URL:',
+                google_sheet_url: 'Google Sheet URL:',
                 max_tx_power: 'Wi-Fi Max TX Power:',
                 remember_bssid: 'Remember BSSID when connecting to Wi-Fi',
                 sleep_mode: 'Enable Sleep Mode',
                 save: 'Save'
-            },
-            'zh-CN': {
-                title: '网络配置',
-                saved_wifi: '已保存的 Wi-Fi',
-                new_wifi: '新的 Wi-Fi',
-                password: '密码:',
-                connect: '连接',
-                connecting: '正在连接...',
-                select_wifi: '从下面列表选择 2.4G Wi-Fi:',
-                select_wifi_5g: '从下面列表选择 Wi-Fi:',
-                scanning: '扫描中...',
-                wifi_tab: 'Wi-Fi 配置',
-                advanced_tab: '高级选项',
-                ota_url: '自定义 OTA 地址:',
-                max_tx_power: 'Wi-Fi 最大发射功率:',
-                remember_bssid: '连接 Wi-Fi 时记住 BSSID',
-                sleep_mode: '启用睡眠模式',
-                save: '保存',
-                no_saved_wifi: '没有保存的 Wi-Fi 网络'
             }
         };
 
@@ -1219,9 +826,7 @@
             // English
             'en': 'en-US', 'en-US': 'en-US', 'en-GB': 'en-US', 'en-CA': 'en-US', 'en-AU': 'en-US',
             // Vietnamese
-            'vi': 'vi-VN', 'vi-VN': 'vi-VN',
-            // Chinese
-            'zh': 'zh-CN', 'zh-CN': 'zh-CN'
+            'vi': 'vi-VN', 'vi-VN': 'vi-VN'
         };
 
         // ========== Helper Functions ==========
@@ -1241,6 +846,25 @@
             }
             // If no match, return English
             return 'en-US';
+        }
+
+        /**
+         * Toggle dark mode
+         */
+        function toggleDarkMode() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-mode');
+            
+            // Save preference to localStorage
+            localStorage.setItem('darkMode', isDark);
+            
+            // Update toggle icon
+            const toggleBtn = document.querySelector('.dark-mode-toggle svg');
+            if (isDark) {
+                toggleBtn.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+            } else {
+                toggleBtn.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+            }
         }
 
         /**
@@ -1464,6 +1088,7 @@
 
             const config = {
                 ota_url: document.getElementById('ota_url').value,
+                google_sheet_url: document.getElementById('google_sheet_url').value,
                 max_tx_power: parseInt(document.getElementById('max_tx_power').value),
                 remember_bssid: document.getElementById('remember_bssid').checked,
                 sleep_mode: document.getElementById('sleep_mode').checked
@@ -1537,6 +1162,9 @@
                 if (data.ota_url) {
                     document.getElementById('ota_url').value = data.ota_url;
                 }
+                if (data.google_sheet_url) {
+                    document.getElementById('google_sheet_url').value = data.google_sheet_url;
+                }
                 if (data.max_tx_power) {
                     document.getElementById('max_tx_power').value = data.max_tx_power;
                 }
@@ -1556,6 +1184,13 @@
          */
         function clearOtaUrl() {
             document.getElementById('ota_url').value = '';
+        }
+
+        /**
+         * Clear Google Sheet URL input field
+         */
+        function clearGoogleSheetUrl() {
+            document.getElementById('google_sheet_url').value = '';
         }
 
         // ========== Initialization ==========
@@ -1599,6 +1234,22 @@
             ssid.removeAttribute('readonly');
             ssid.focus();
         }, {once: true});
+
+        /**
+         * Load dark mode preference
+         */
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            document.body.classList.add('dark-mode');
+            const toggleBtn = document.querySelector('.dark-mode-toggle svg');
+            toggleBtn.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+        } else {
+            // Light mode default - ensure sun icon
+            const toggleBtn = document.querySelector('.dark-mode-toggle svg');
+            toggleBtn.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+        }
     </script>
+
+
 </body>
 </html>

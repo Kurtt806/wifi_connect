@@ -66,8 +66,9 @@ private:
     esp_netif_t* ap_netif_ = nullptr;
     std::vector<wifi_ap_record_t> ap_records_;
 
-    // 高级配置项
+    //Các mục cấu hình nâng cao
     std::string ota_url_;
+    std::string google_sheet_url_;
     int8_t max_tx_power_;
     bool remember_bssid_;
     bool sleep_mode_;

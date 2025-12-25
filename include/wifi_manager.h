@@ -46,6 +46,10 @@ enum class WifiEvent {
 struct WifiManagerConfig {
     std::string ssid_prefix = "ESP32";    // AP mode SSID prefix
     std::string language = "zh-CN";       // Web UI language
+    
+    // Station mode scan interval with exponential backoff
+    int station_scan_min_interval_seconds = 10;   // Initial scan interval (fast retry)
+    int station_scan_max_interval_seconds = 300;  // Maximum scan interval (5 minutes)
 };
 
 /**
@@ -90,6 +94,7 @@ public:
     void SetEventCallback(std::function<void(WifiEvent)> callback);
 
     const WifiManagerConfig& GetConfig() const { return config_; }
+    std::string GetGoogleSheetUrl() const;
 
     WifiManager(const WifiManager&) = delete;
     WifiManager& operator=(const WifiManager&) = delete;

@@ -4,26 +4,107 @@
     <title>WiFi Configuration</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            transition: background 0.3s ease;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WiFi Configuration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style type="text/css">
+        /* ========== Modern UI Design ========== */
+        :root {
+            /* Light Theme (Default) - Moss Green Primary */
+            --primary-color: #22c55e; /* Moss green */
+            --primary-hover: #16a34a;
+            --primary-light: #4ade80;
+            --secondary-color: #64748b;
+            --accent-color: #059669; /* Emerald */
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --background-primary: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #f0fdf4 100%);
+            --background-secondary: rgba(255, 255, 255, 0.95);
+            --background-tertiary: rgba(240, 253, 244, 0.8);
+            --text-primary: #1d1d1f;
+            --text-secondary: #6b7280;
+            --shadow-light: 0 2px 8px rgba(34, 197, 94, 0.1);
+            --shadow-medium: 0 4px 16px rgba(34, 197, 94, 0.12);
+            --shadow-large: 0 8px 32px rgba(34, 197, 94, 0.15);
+            --border-radius: 16px;
+            --border-radius-small: 8px;
+            --border-radius-large: 20px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Apple-like easing */
+            --transition-fast: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 32px;
+            background: var(--background-primary);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ========== Typography ========== */
+        h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 24px 0;
+            color: var(--text-primary);
+            letter-spacing: -0.022em;
+            line-height: 1.2;
+        }
+
+        p {
+            margin: 0 0 16px 0;
+            color: var(--text-secondary);
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        /* ========== Language Switcher ========== */
+        .language-switch {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+        }
+
+        .language-switch select {
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            background: var(--background-secondary);
+            backdrop-filter: blur(20px);
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .language-switch select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1), var(--shadow-medium);
+            animation: none;
+        }
+
+        /* ========== Container and Content ========== */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            max-height: 100vh;
+            height: calc(100vh - 64px);
+            max-height: calc(100vh - 64px);
             box-sizing: border-box;
-            padding: 20px;
             animation: fadeIn 1s ease;
         }
 
@@ -39,7 +120,7 @@
             stroke-dashoffset: 166;
             stroke-width: 2;
             stroke-miterlimit: 10;
-            stroke: #FF9500;
+            stroke: var(--success-color);
             fill: none;
             animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
         }
@@ -48,7 +129,7 @@
             transform-origin: 50% 50%;
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
-            stroke: #FF9500;
+            stroke: var(--success-color);
             animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
         }
 
@@ -58,8 +139,35 @@
             margin-bottom: 20px;
             font-weight: 600;
             animation: slideUp 0.8s ease 0.5s both;
+            color: var(--text-primary);
         }
 
+        .vibohub-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .vibohub-link a {
+            display: inline-block;
+            padding: 16px 24px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 17px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            animation: slideUp 0.8s ease 0.7s both;
+        }
+
+        .vibohub-link a:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* ========== Animations ========== */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -80,26 +188,11 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Language switcher for done page */
-        .language-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-        .language-switch select {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #e1e5e9;
-            background: #fff;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .language-switch select:focus {
-            outline: none;
-            border-color: #FF9500;
-            box-shadow: 0 0 0 3px rgba(255,149,0,0.1);
-        }
+    </style>
     </style>
 </head>
 <body>
@@ -108,7 +201,6 @@
         <select id="language" onchange="changeLanguage()">
             <option value="vi-VN">Tiếng Việt</option>
             <option value="en-US">English</option>
-            <option value="zh-CN">简体中文</option>
         </select>
     </div>
     
@@ -119,9 +211,12 @@
         </svg>
         
         <div class="message">
-            <p data-lang="config_success_zh">配置成功！</p>
             <p data-lang="config_success_en">Configuration successful!</p>
             <p data-lang="config_success_vi">Cấu hình thành công!</p>
+        </div>
+        
+        <div class="vibohub-link">
+            <a href="https://vibohub.com" target="_blank" data-lang-link="visit_vibohub">Truy cập ViboHub</a>
         </div>
     </div>
     
@@ -131,17 +226,14 @@
             'vi-VN': {
                 'config_success_zh': 'Cấu hình thành công!',
                 'config_success_en': 'Configuration successful!',
-                'config_success_vi': 'Cấu hình thành công!'
+                'config_success_vi': 'Cấu hình thành công!',
+                'visit_vibohub': 'Truy cập ViboHub'
             },
             'en-US': {
                 'config_success_zh': 'Configuration successful!',
                 'config_success_en': 'Configuration successful!',
-                'config_success_vi': 'Configuration successful!'
-            },
-            'zh-CN': {
-                'config_success_zh': '配置成功！',
-                'config_success_en': 'Configuration successful!',
-                'config_success_vi': '配置成功！'
+                'config_success_vi': 'Configuration successful!',
+                'visit_vibohub': 'Visit ViboHub'
             }
         };
 
@@ -153,6 +245,11 @@
                     const elements = document.querySelectorAll(`[data-lang="${key}"]`);
                     elements.forEach(el => el.textContent = data[key]);
                 });
+                // Update link text
+                const link = document.querySelector('[data-lang-link="visit_vibohub"]');
+                if (link) {
+                    link.textContent = data['visit_vibohub'];
+                }
             }
         }
 
